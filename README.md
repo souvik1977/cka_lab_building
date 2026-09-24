@@ -143,7 +143,7 @@ curl -fsSL \
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${KUBERNETES_VERSION}/deb/ /" \
   | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-# Add CRI-O repository
+## Add CRI-O repository
 
 curl -fsSL \
   "https://download.opensuse.org/repositories/isv:/cri-o:/stable:/${CRIO_VERSION}/deb/Release.key" \
@@ -161,7 +161,7 @@ sudo apt-get update
 
 sudo apt-get install -y cri-o kubelet kubeadm kubectl
 
-# Enable and run crio
+## Enable and run crio
 
 sudo systemctl enable --now crio
 
@@ -187,6 +187,34 @@ kubectl version --client
 sudo test -S /var/run/crio/crio.sock && echo "CRI-O socket is available"
 
 
+
+##### If you want to use containerd instead of CRI-O then follow below steps on all nodes ####
+
+sudo apt install -y containerd
+
+sudo mkdir -p /etc/containerd
+
+containerd config default | sudo tee /etc/containerd/config.toml
+
+## Enable systemd group
+
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+
+## Restart containerd services
+
+sudo systemctl restart containerd
+
+sudo systemctl enable containerd
+
+
+### Verify
+
+systemctl status containerd
+
+
+
+
+
 ############# Run only on CP01 ###########
 
 sudo kubeadm config images pull \
@@ -206,7 +234,19 @@ sudo kubeadm init \
   --node-name=cp01
 
 
+## For containerd
+
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+
 ### Run only on worker nodes #############
+
+sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
+  --token <TOKEN> \
+  --discovery-token-ca-cert-hash sha256:<HASH>
+  --cri-socket unix:///var/run/crio/crio.sock
+
+## While using containerd
 
 sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
   --token <TOKEN> \
