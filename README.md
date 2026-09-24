@@ -103,11 +103,18 @@ sudo sysctl --system
 
 # Creating /etc/hosts
 
-sudo tee -a /etc/hosts >/dev/null <<EOF
-192.168.122.47	cp01
+echo "192.168.122.47 cp01" | sudo tee -a /etc/hosts
+
+echo "192.168.122.84 worker01" | sudo tee -a /etc/hosts
+
+echo "192.168.122.144 worker02" | sudo tee -a /etc/hosts
+
+## Alternatively
+sudo sh -c 'cat >> /etc/hosts <<EOF
+192.168.122.47 cp01
 192.168.122.84 worker01
 192.168.122.144 worker02
-EOF
+EOF'
 
 # Verifying entries
 
