@@ -195,7 +195,7 @@ sudo test -S /var/run/crio/crio.sock && echo "CRI-O socket is available"
 
 
 
-##### If you want to use containerd instead of CRI-O then follow below steps on all nodes ####
+## If you want to use containerd instead of CRI-O then follow below steps on all nodes ####
 
 sudo apt install -y containerd
 
