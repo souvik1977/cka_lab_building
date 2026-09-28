@@ -273,3 +273,18 @@ sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
 
 kubectl get nodes
 
+
+
+## Reset Cluster:
+sudo kubeadm reset -f
+
+sudo rm -rf /etc/kubernetes/
+
+rm -rf $HOME/.kube/
+
+sudo rm -rf /etc/cni/net.d
+
+sudo rm -rf /var/lib/cni/
+
+sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+
