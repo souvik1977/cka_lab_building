@@ -230,6 +230,7 @@ sudo kubeadm config images pull \
 ## Identify IPv4 Address of control plane
 
 CONTROL_PLANE_IP=$(ip -4 route get 1.1.1.1 | awk '{print $7; exit}')
+
 echo "$CONTROL_PLANE_IP"
 
 ## Initiate kubeadm init:
