@@ -122,6 +122,10 @@ resource "libvirt_domain" "cp01" {
 
   cloudinit = libvirt_cloudinit_disk.cp01_init.id
 
+  cpu {
+  mode = "host-passthrough"
+  }
+
   disk {
     volume_id = libvirt_volume.cp01_disk.id
   }
@@ -156,6 +160,10 @@ resource "libvirt_domain" "worker01" {
   vcpu   = 1
 
   cloudinit = libvirt_cloudinit_disk.worker01_init.id
+
+  cpu {
+  mode = "host-passthrough"
+  }
 
   disk {
     volume_id = libvirt_volume.worker01_disk.id
@@ -192,6 +200,10 @@ resource "libvirt_domain" "worker02" {
   vcpu   = 1
 
   cloudinit = libvirt_cloudinit_disk.worker02_init.id
+
+  cpu {
+  mode = "host-passthrough"
+  }
 
   disk {
     volume_id = libvirt_volume.worker02_disk.id
