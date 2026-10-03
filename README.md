@@ -72,13 +72,13 @@ ssh ubuntu@192.168.122.101
 # Step-9
 # Configuring Cluster
 
-# Excute below commands on all three nodes
+## Execute below commands on all three nodes
 
 sudo swapoff -a
 
 sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
 
-# Creting modules to load
+## Creating modules to load
 
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
 overlay
@@ -89,7 +89,7 @@ sudo modprobe overlay
 
 sudo modprobe br_netfilter
 
-# Creating Kernel Configuration file
+## Creating Kernel Configuration file
 
 cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.bridge.bridge-nf-call-iptables = 1
@@ -101,7 +101,7 @@ EOF
 sudo sysctl --system
 
 
-# Creating /etc/hosts
+## Creating /etc/hosts
 
 echo "192.168.122.47 cp01" | sudo tee -a /etc/hosts
 
@@ -116,7 +116,7 @@ sudo sh -c 'cat >> /etc/hosts <<EOF
 192.168.122.144 worker02
 EOF'
 
-# Verifying entries
+## Verifying entries
 
 getent hosts cp01
 
@@ -139,7 +139,7 @@ KUBERNETES_VERSION=v1.37
 CRIO_VERSION=v1.37
 
 
-# Add kubernetes repository
+## Add kubernetes repository
 
 curl -fsSL \
   "https://pkgs.k8s.io/core:/stable:/${KUBERNETES_VERSION}/deb/Release.key" \
@@ -162,11 +162,15 @@ echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.o
   | sudo tee /etc/apt/sources.list.d/cri-o.list
 
 
-# Installing CRI-O, kubelet, kubeadm and kubectl
+## Installing CRI-O, kubelet, kubeadm and kubectl
 
 sudo apt-get update
 
+apt-cache madison kubeadm
+
 sudo apt-get install -y cri-o kubelet kubeadm kubectl
+
+apt-mark hold kubelet kubeadm kubectl
 
 ## Enable and run crio
 
@@ -221,8 +225,7 @@ systemctl status containerd
 
 
 
-
-############# Run only on CP01 ###########
+# On Control Node:
 
 sudo kubeadm config images pull \
   --cri-socket unix:///var/run/crio/crio.sock
@@ -273,6 +276,11 @@ sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
 
 kubectl get nodes
 
+## Installing network plugin [On Control Node]
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
 
 
 ## Reset Cluster:
@@ -287,4 +295,50 @@ sudo rm -rf /etc/cni/net.d
 sudo rm -rf /var/lib/cni/
 
 sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+
+
+# Troubleshooting:
+
+[a] Node Not ready: $kubectl describe node <NODE>
+
+[b] No Calico/Cilium Pods: 
+
+$kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+
+$kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
+
+[c] Calico Pod stuck in Init: $kubectl logs <calico-pod> -c upgrade-ipam -n kube-system
+
+[d] Calico Pods shows only AMD64 process can run [KVM specific issue]: 
+
+$lscpu 
+
+$grep -m1 flags /proc/cpuinfo   [Search for sss, ssse3, sss4]
+
+[e] Upgrade KVM Guests to provide required CPU support:
+
+$virsh shutdown <guest>     # Here all three nodes control, worker1, worker2
+
+or
+
+$virsh undefine <guest> 
+
+$virsh edit <guest_machine>
+
+search for <cpu ....> section and modify 'mode' to 'host-passthrough' and 'check' to 'none'
+
+$virst start <guest>
+
+$lscpu | grep -m1 -oE ssses
+
+[On all nodes]
+
+$sudo systemctl restart containerd
+
+$sudo systemctl restart kubelet
+
+
+[f] Worker Node Showed 'Node Status Unknown':  $kubectl describe node <NODE>
+
+
 
