@@ -88,24 +88,11 @@ printf '%-25s %s\n' \
 
 ## [3] - Enabling APIs:
 
-gcloud services enable \
-  container.googleapis.com \
-  compute.googleapis.com \
-  iam.googleapis.com \
-  iamcredentials.googleapis.com \
-  cloudresourcemanager.googleapis.com \
-  serviceusage.googleapis.com \
-  artifactregistry.googleapis.com \
-  cloudbuild.googleapis.com \
-  logging.googleapis.com \
-  monitoring.googleapis.com \
-  containeranalysis.googleapis.com
+gcloud services enable   container.googleapis.com   compute.googleapis.com   iam.googleapis.com   iamcredentials.googleapis.com   cloudresourcemanager.googleapis.com   serviceusage.googleapis.com   artifactregistry.googleapis.com   cloudbuild.googleapis.com   logging.googleapis.com   monitoring.googleapis.com   containeranalysis.googleapis.com
 
 ## [4] - Listing enabled APIs:
 
-gcloud services list --enabled \
-  --filter="config.name:(container.googleapis.com OR compute.googleapis.com OR artifactregistry.googleapis.com OR cloudbuild.googleapis.com OR logging.googleapis.com OR monitoring.googleapis.com)" \
-  --format="table(config.name)"
+gcloud services list --enabled --filter="config.name:(container.googleapis.com OR compute.googleapis.com OR artifactregistry.googleapis.com OR cloudbuild.googleapis.com OR logging.googleapis.com OR monitoring.googleapis.com)" --format="table(config.name)"
 
 ## [5] - Configuring a new profile: 
 
