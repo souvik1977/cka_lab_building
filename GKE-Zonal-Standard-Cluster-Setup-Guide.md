@@ -22,7 +22,7 @@ source .bashrc
 gcloud init 
 
 ## [1] - Exporting required variables (this step might need to execute everytime you are reconnecting to cloudshell or your local machine):
-export PROJECT_ID="project-fd0ef618-f315-4236-941"
+export PROJECT_ID="project-xxxx-yyyy-zzzz-aaaa"
 
 export BILLING_ACCOUNT_ID="XXXXX-XXXXX-XXXXX"
 
