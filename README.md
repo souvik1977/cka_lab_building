@@ -348,4 +348,15 @@ $sudo dnf install dnsmasq-utils
 $dhcp_release virbr0 192.168.122.84 52:54:00:62:22:e3
 
 
+## Updating /etc/hosts on KVM Base machine 
+
+
+sed -i 's/192.168.122.47/192.168.122.190/g' /etc/hosts
+
+sed -i 's/192.168.122.84/192.168.122.137/g' /etc/hosts
+
+sed -i 's/192.168.122.144/192.168.122.106/g' /etc/hosts
+
+
+
 
