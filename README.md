@@ -81,8 +81,11 @@ sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
 ## Creating modules to load
 
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+
 overlay
+
 br_netfilter
+
 EOF
 
 sudo modprobe overlay
