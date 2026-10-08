@@ -339,7 +339,19 @@ sudo kubeadm token create --print-join-command
 
 kubectl get nodes
 
+## Testing:
 
+# Spin up a temporary test pod
+kubectl run busybox --image=busybox --restart=Never -- sleep 3600
+
+# Verify it gets an IP from your 10.240.x.x pool
+kubectl get pod busybox -o wide
+
+# Test internal CoreDNS lookup via your custom 'lab.example.com' suffix
+kubectl exec -it busybox -- nslookup kubernetes.default.svc.lab.example.com
+
+
+########################## RESET Cluster ###################################################
 ## Reset Cluster:
 sudo kubeadm reset -f
 
