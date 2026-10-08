@@ -262,6 +262,29 @@ sudo kubeadm init \
 
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 
+## Configuration Using customized config file:
+
+sudo kubeadm config print init-defaults > config.yml
+
+sed -i 's|kubernetesVersion: 1.37.0|kubernetesVersion: v1.37.0|g' config.yml
+
+sed -i 's|advertiseAddress: 1.2.3.4|advertiseAddress: 192.168.122.190|g' config.yml
+
+sed -i 's|name: node|name: cp01|g' config.yml
+
+sed -i 's|clusterName: kubernetes|clusterName: dev.k8s.cluster|g' config.yml
+
+sed -i '/kind: ClusterConfiguration/a controlPlaneEndpoint: cp01.lab.example.com:6443' config.yml
+
+sed -i 's|serviceSubnet: 10.96.0.0/12|serviceSubnet: 10.96.0.0/12\n  podSubnet: "10.240.0.0/16"|g' config.yml
+
+sed -i 's|dnsDomain: cluster.local|dnsDomain: lab.example.com|g' config.yml
+
+sed -i 's|podSubnet: "10.240.0.0/16"|podSubnet: 10.240.0.0/16|g' config.yml
+
+## As needed:
+sed -i 's|controlPlaneEndpoint: "cp01.lab.example.com:6443"|controlPlaneEndpoint: cp01.lab.example.com:6443|g' config.yml
+
 
 ### Run only on worker nodes #############
 
