@@ -340,5 +340,12 @@ $sudo systemctl restart kubelet
 
 [f] Worker Node Showed 'Node Status Unknown':  $kubectl describe node <NODE>
 
+## How To release unused DHCP Address
+
+$sudo dnf install dnsmasq-utils
+
+
+$dhcp_release virbr0 192.168.122.84 52:54:00:62:22:e3
+
 
 
