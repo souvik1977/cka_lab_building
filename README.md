@@ -286,6 +286,15 @@ sed -i 's|podSubnet: "10.240.0.0/16"|podSubnet: 10.240.0.0/16|g' config.yml
 sed -i 's|controlPlaneEndpoint: "cp01.lab.example.com:6443"|controlPlaneEndpoint: cp01.lab.example.com:6443|g' config.yml
 
 
+##################### Configure Kubelet on Control Node ##############
+
+mkdir -p "$HOME/.kube"
+
+sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
+
+sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
+
+
 ### Run only on worker nodes #############
 
 sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
@@ -298,15 +307,6 @@ sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
 sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
   --token <TOKEN> \
   --discovery-token-ca-cert-hash sha256:<HASH>
-
-
-##################### Configure Kubelet on Control Node ##############
-
-mkdir -p "$HOME/.kube"
-
-sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
-
-sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
 
 ### Verify Access ###
 
