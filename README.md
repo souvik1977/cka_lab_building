@@ -294,6 +294,11 @@ sudo cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
 
 sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
 
+## Installing network plugin [On Control Node]
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
 
 ### Run only on worker nodes #############
 
@@ -308,15 +313,20 @@ sudo kubeadm join <CONTROL_PLANE_IP>:6443 \
   --token <TOKEN> \
   --discovery-token-ca-cert-hash sha256:<HASH>
 
+
+### Troubleshooting:
+
+Troubleshooting: 
+####Error:
+error: error execution phase preflight: couldn't validate the identity of the API Server: invalid discovery token CA certificate hash: invalid hash "sha256:d8c5d7addc2653cd90822be6145c9091157faf63ac15d6b98277", expected a 32 byte SHA-256 hash, found 26 bytes
+To see the stack trace of this error execute with --v=5 or higher
+
+####Fix:
+sudo kubeadm token create --print-join-command
+
 ### Verify Access ###
 
 kubectl get nodes
-
-## Installing network plugin [On Control Node]
-
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
-
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
 
 
 ## Reset Cluster:
