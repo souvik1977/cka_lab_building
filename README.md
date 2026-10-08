@@ -72,6 +72,16 @@ ssh ubuntu@192.168.122.101
 # Step-9
 # Configuring Cluster
 
+## Set hostname [All Nodes]
+[Control Node]
+sudo hostnamectl set-hostname cp01.lab.example.com
+
+[worker01]
+sudo hostnamectl set-hostname worker01.lab.example.com
+
+[worker02]
+sudo hostnamectl set-hostname worker02.lab.example.com
+
 ## Execute below commands on all three nodes
 
 sudo swapoff -a
