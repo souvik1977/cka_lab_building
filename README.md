@@ -296,9 +296,20 @@ sudo chown "$(id -u):$(id -g)" "$HOME/.kube/config"
 
 ## Installing network plugin [On Control Node]
 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+## Installing Calico manifests files [Control Plane]:
 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
+wget -4 -O calico.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+
+wget -4 -O custom-resources.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
+
+sed -i 's|cidr: 192.168.0.0/16|cidr: 10.240.0.0/16|g' calico.yaml
+
+
+kubectl create -f calico.yaml
+
+kubectl create -f custom-resources.yaml
+
+kubectl get pods -n calico-system
 
 ### Run only on worker nodes #############
 
