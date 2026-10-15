@@ -49,6 +49,7 @@ sudo grep -R preserve_hostname /etc/cloud
 
 ## Swap-Off [All Nodes]
 sudo swapoff -a
+
 sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
 
 ## Importing Kernel Modules [All Nodes]
@@ -81,7 +82,9 @@ sudo sh -c 'cat >> /etc/hosts <<EOF
 EOF'
 
 sudo sed -i 's|192.168.122.190|192.168.122.4|g' /etc/hosts
+
 sudo sed -i 's|192.168.122.137|192.168.122.214|g' /etc/hosts
+
 sudo sed -i 's|192.168.122.106|192.168.122.147|g' /etc/hosts
 
 ### Checking hosts entries:
