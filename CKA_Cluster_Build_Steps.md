@@ -170,12 +170,19 @@ echo "$CONTROL_PLANE_IP"
 sudo kubeadm config print init-defaults > config.yml
 
 sed -i 's|kubernetesVersion: 1.36.0|kubernetesVersion: v1.36.0|g' config.yml
+
 sed -i 's|advertiseAddress: 1.2.3.4|advertiseAddress: 192.168.122.4|g' config.yml
+
 sed -i 's|name: node|name: cp01|g' config.yml
+
 sed -i 's|clusterName: kubernetes|clusterName: dev.k8s.cluster|g' config.yml
+
 sed -i '/kind: ClusterConfiguration/a controlPlaneEndpoint: cp01.lab.example.com:6443' config.yml
+
 sed -i 's|serviceSubnet: 10.96.0.0/12|serviceSubnet: 10.96.0.0/12\n  podSubnet: "10.240.0.0/16"|g' config.yml
+
 sed -i 's|dnsDomain: cluster.local|dnsDomain: lab.example.com|g' config.yml
+
 sed -i 's|podSubnet: "10.240.0.0/16"|podSubnet: 10.240.0.0/16|g' config.yml
 
 ## As needed:
@@ -217,12 +224,14 @@ source ~/.bashrc
 ## Installing Calico manifests files [Control Plane]:
 
 wget -4 -O calico.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+
 wget -4 -O custom-resources.yaml https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
 
 sed -i 's|cidr: 192.168.0.0/16|cidr: 10.240.0.0/16|g' custom-resources.yaml
 
 
 kubectl create -f calico.yaml
+
 kubectl create -f custom-resources.yaml
 
 kubectl get pods -n calico-system
@@ -280,12 +289,15 @@ sudo kubeadm join cp01.lab.example.com:6443 --token abcdef.0123456789abcdef \
         --discovery-token-ca-cert-hash sha256:d8c5d7addc2653cd90822be6145c9091157faf63ac15d6b9827747cf65382af3
 
 #### Spin up a temporary test pod
+
 kubectl run busybox --image=busybox --restart=Never -- sleep 3600
 
 #### Verify it gets an IP from your 10.240.x.x pool
+
 kubectl get pod busybox -o wide
 
 #### Test internal CoreDNS lookup via your custom 'lab.example.com' suffix
+
 kubectl exec -it busybox -- nslookup kubernetes.default.svc.lab.example.com
 
 
@@ -505,6 +517,7 @@ pager /etc/apt/sources.list.d/kubernetes.list
 ##### [b] Modify the version from "v1.36" to "v1.37"
 
 From - https://pkgs.k8s.io/core:/stable:/v1.36/deb/
+
 To - https://pkgs.k8s.io/core:/stable:/v1.37/deb/
 
 sudo sed -i 's|v1.36|v1.37|g' /etc/apt/sources.list.d/kubernetes.list
@@ -547,16 +560,20 @@ sudo kubeadm upgrade apply v1.37.0
 Expected output:
 
 [upgrade/versions] Cluster version: v1.36.0
+
 [upgrade/versions] kubeadm version: v1.37.0
+
 [upgrade] Are you sure you want to proceed? [y/N]: Y
 
 
 ##### [i] Upgrade the kubelet and kubectl 
 
 [Drain the control node]
+
 kubectl drain cp01 --ignore-daemonsets
 
 [Upgrade kubelet and kubectl]
+
 sudo apt-mark unhold kubelet kubectl && \
 sudo apt-get update && sudo apt-get install -y kubelet='1.37.0-1.1' kubectl='1.37.0-1.1' && \
 sudo apt-mark hold kubelet kubectl
@@ -582,6 +599,7 @@ pager /etc/apt/sources.list.d/kubernetes.list
 ##### [b] Modify the version from "v1.36" to "v1.37"
 
 From - https://pkgs.k8s.io/core:/stable:/v1.36/deb/
+
 To - https://pkgs.k8s.io/core:/stable:/v1.37/deb/
 
 sudo sed -i 's|v1.36|v1.37|g' /etc/apt/sources.list.d/kubernetes.list
@@ -624,12 +642,15 @@ sudo kubeadm upgrade node v1.37.0
 Expected output:
 
 [upgrade/versions] Cluster version: v1.36.0
+
 [upgrade/versions] kubeadm version: v1.37.0
+
 [upgrade] Are you sure you want to proceed? [y/N]:
 
 ##### [i] Upgrade the kubelet and kubectl 
 
-[Drain the control node from the primary control node ]
+[Drain the control node from the secondary control node ]
+
 kubectl drain <node> --ignore-daemonsets
 
 [Upgrade kubelet and kubectl]
@@ -657,6 +678,7 @@ pager /etc/apt/sources.list.d/kubernetes.list
 ##### [b] Modify the version from "v1.36" to "v1.37"
 
 From - https://pkgs.k8s.io/core:/stable:/v1.36/deb/
+
 To - https://pkgs.k8s.io/core:/stable:/v1.37/deb/
 
 sudo sed -i 's|v1.36|v1.37|g' /etc/apt/sources.list.d/kubernetes.list
