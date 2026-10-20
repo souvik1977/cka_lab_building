@@ -28,49 +28,81 @@ grep -qF '192.168.122.232' /etc/hosts || echo '192.168.122.232 cp03.lab.example.
 [Modify your '.ssh/config' file to add entries for cp02 and cp03]
 
 Host cp01
+
         Hostname cp01.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
 
 Host cp02
+
         Hostname cp02.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
 
 Host cp03
+
         Hostname cp03.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
 
 Host worker01
+
         Hostname worker01.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
 
 Host worker02
+
         Hostname worker02.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
 
 Host usrv01
+
         Hostname usrv01.lab.example.com
+		
         User ubuntu
+		
         IdentityFile /home/souvik/.ssh/id_ed25519
+		
         StrictHostKeyChecking no
+		
         UserKnownHostsFile /dev/null
+		
 
 
 ##### Set hostname [All Nodes]
+
 [Control Node 1]
 
 sudo hostnamectl set-hostname cp01.lab.example.com
