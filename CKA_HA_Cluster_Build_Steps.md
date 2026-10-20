@@ -355,12 +355,12 @@ global_defs {
 
    router_id LVS_DEVEL
    
-   # vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
+   #vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
    
-   # vrrp_strict 
+   #vrrp_strict 
 }
 
-# Script used to check if HAProxy is running
+#Script used to check if HAProxy is running
 vrrp_script check_haproxy {
 
     script "killall -0 haproxy"
@@ -417,11 +417,11 @@ ip addr show ens3  #this should show that 192.168.122.100 is bind with the eth c
 sudo tee /etc/keepalived/keepalived.conf << 'EOF'
 global_defs {
    router_id LVS_DEVEL
-   # vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
-   # vrrp_strict 
+   #vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
+   #vrrp_strict 
 }
 
-# Script used to check if HAProxy is running
+#Script used to check if HAProxy is running
 vrrp_script check_haproxy {
 
     script "killall -0 haproxy"
@@ -477,11 +477,11 @@ sudo systemctl enable keepalived
 sudo tee /etc/keepalived/keepalived.conf << 'EOF'
 global_defs {
    router_id LVS_DEVEL
-   # vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
-   # vrrp_strict 
+   #vrrp_strict can break VIP reachability if not configured with precise firewall rules; it is typically commented out for K8s clusters
+   #vrrp_strict 
 }
 
-# Script used to check if HAProxy is running
+#Script used to check if HAProxy is running
 vrrp_script check_haproxy {
     script "killall -0 haproxy"
     interval 2
@@ -548,7 +548,7 @@ defaults
     
     option  dontlognull
     
-    # Essential timeouts for Kubernetes API stability
+    #Essential timeouts for Kubernetes API stability
     
     timeout connect 10s
     
@@ -557,11 +557,11 @@ defaults
     timeout server  1m
 
 #---------------------------------------------------------------------
-# Kubernetes Control Plane Frontend
+#Kubernetes Control Plane Frontend
 #---------------------------------------------------------------------
 frontend k8s_apiserver_frontend
 
-	# Replace the ip address as per your setup 
+	#Replace the ip address as per your setup 
   
     bind 192.168.122.100:6443      
     
@@ -572,7 +572,7 @@ frontend k8s_apiserver_frontend
     default_backend k8s_apiserver_backend
 
 #---------------------------------------------------------------------
-# Kubernetes Control Plane Backends
+#Kubernetes Control Plane Backends
 #---------------------------------------------------------------------
 
 backend k8s_apiserver_backend
@@ -583,7 +583,7 @@ backend k8s_apiserver_backend
     
     balance roundrobin
     
-    # Replace the placeholder IPs (192.168.122.X) below with your actual Control Plane node IPs
+    #Replace the placeholder IPs (192.168.122.X) below with your actual Control Plane node IPs
     
     server cp01 192.168.122.179:6443 check fall 3 rise 2
     
